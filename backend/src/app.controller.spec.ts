@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "Finanças Pro API is running"', () => {
+      expect(appController.getHealth()).toBe('Finanças Pro API is running');
     });
   });
 });

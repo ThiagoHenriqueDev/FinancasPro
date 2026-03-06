@@ -2,7 +2,8 @@
 Sistema Fullstack de controle de financeiro (React + Node.js)
 
 ## Sobre o Projeto 
-Este projeto é um **Monorepo** que contém o ecossistema completo de uma aplicação financeira. O objetivo é sair do CRUD básico e chegar a uma arquitetura profissional com autenticação e gráficos.
+Este projeto é utilizado para estudo e prática de desenvolvimento fullstack, para aprender e registrar meu progresso.
+a ideia é criar um sistema de controle financeiro, onde o usuário pode cadastrar suas receitas e despesas, e visualizar gráficos e relatórios para acompanhar sua saúde financeira.
 
 ---
 
@@ -10,7 +11,7 @@ Este projeto é um **Monorepo** que contém o ecossistema completo de uma aplica
 
 * **Backend**
     - Node.js com NestJS (pela estrutura organizada e profissional).
-    - PostgreSQL com Prisma ORM.
+    - PostgreSQL com Prisma ORM (Banco de dados Neon para nao ter que configurar localmente).
 * **Frontend**
      - React + Vite
      - Tailwind CSS
