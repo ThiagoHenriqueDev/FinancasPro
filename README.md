@@ -36,6 +36,9 @@ a ideia é criar um sistema de controle financeiro, onde o usuário pode cadastr
     npm install
     ```
 3. Configure o banco de dados PostgreSQL e atualize as variáveis de ambiente no arquivo `.env`.
+   ```bash
+   variaveis de ambiente: no arquivo .env.exemple, atualize as variáveis DATABASE_URL e DATABASE_URL_POOL com as informações do seu banco de dados PostgreSQL.
+   ```
 4. Rode as migrações do Prisma para criar as tabelas:
    ```bash
    npx prisma migrate dev

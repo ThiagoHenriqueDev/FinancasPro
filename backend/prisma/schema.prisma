@@ -12,3 +12,137 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum TipoLancamento {
+  RECEITA
+  DESPESA
+}
+
+enum TipoMovimento {
+  ENTRADA
+  SAIDA
+}
+
+enum StatusLancamento {
+  PENDENTE
+  VENCIDO
+  PARCIAL
+  PAGO
+  CANCELADO
+}
+
+enum OrigemMovimento {
+  BAIXA
+  AJUSTE
+  DEPOSITO
+  TRANSFERENCIA
+}
+
+model DocumentoFinanceiro {
+  id              String         @id @default(uuid())
+  numeroDocumento String
+  descricao       String
+  tipo            TipoLancamento
+  valorTotal      Float
+  dataEmissao     DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lancamentos Lancamento[]
+}
+
+model Lancamento {
+  id                    String           @id @default(uuid())
+  valorParcela          Float
+  valorPago             Float            @default(0)
+  valorDesconto         Float            @default(0)
+  valorJuros            Float            @default(0)
+  valorMulta            Float            @default(0)
+  dataVencimento        DateTime
+  numeroParcela         Int
+  totalParcelas         Int
+  status                StatusLancamento
+  planoContaId          String
+  documentoFinanceiroId String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  planoConta          PlanoConta           @relation(fields: [planoContaId], references: [id])
+  documentoFinanceiro DocumentoFinanceiro? @relation(fields: [documentoFinanceiroId], references: [id])
+
+  baixaLancamentos BaixaLancamento[]
+
+  @@index([dataVencimento])
+  @@index([status])
+}
+
+model Baixa {
+  id            String   @id @default(uuid())
+  dataBaixa     DateTime
+  valorPago     Float
+  valorDesconto Float
+  valorJuros    Float
+  valorMulta    Float
+  contaId       String
+  createdAt     DateTime @default(now())
+
+  conta ContaFinanceira @relation(fields: [contaId], references: [id])
+
+  lancamentos     BaixaLancamento[]
+  movimentoContas MovimentoConta[]
+}
+
+model BaixaLancamento {
+  id            String   @id @default(uuid())
+  valorAplicado Float
+  baixaId       String
+  lancamentoId  String
+  createdAt     DateTime @default(now())
+
+  baixa      Baixa      @relation(fields: [baixaId], references: [id])
+  lancamento Lancamento @relation(fields: [lancamentoId], references: [id])
+
+  @@unique([baixaId, lancamentoId])
+}
+
+model PlanoConta {
+  id        String         @id @default(uuid())
+  nome      String
+  numero    String
+  tipo      TipoLancamento
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  lancamentos Lancamento[]
+}
+
+model ContaFinanceira {
+  id           String   @id @default(uuid())
+  nome         String
+  numero       String
+  saldoInicial Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  baixas          Baixa[]
+  movimentoContas MovimentoConta[]
+}
+
+model MovimentoConta {
+  id            String          @id @default(uuid())
+  descricao     String
+  tipo          TipoMovimento
+  origem        OrigemMovimento
+  valor         Float
+  dataMovimento DateTime
+  contaId       String
+  baixaId       String?
+  createdAt     DateTime        @default(now())
+
+  conta ContaFinanceira @relation(fields: [contaId], references: [id])
+  baixa Baixa?          @relation(fields: [baixaId], references: [id])
+
+  @@index([dataMovimento])
+  @@index([contaId])
+}
